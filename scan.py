@@ -19,14 +19,15 @@ def confirm(message, choice):
 def check_up(ips: str):
     print("Starting scanner")
     new_scanner = nmap.PortScanner()
-    new_scanner.scan(hosts=ips, arguments='-n -T4 --min-parallelism 100 --max-retries 1')
+    n = new_scanner.scan(hosts=ips, arguments='-n -T4 --min-parallelism 100 --max-retries 1')
 
     headers = {
         "scanned": ips
     }
 
-    print(str(new_scanner[ips]))
-    requests.post(MAIN_SERVER+"ips", data=json.dumps(new_scanner[ips]),headers=headers)
+    if n['nmap']['scanstats']['uphosts'] == '1':
+        print(str(new_scanner[ips]))
+        requests.post(MAIN_SERVER+"ips", data=json.dumps(new_scanner[ips]),headers=headers)
     
 
 def work():
